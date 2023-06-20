@@ -3,8 +3,28 @@ import sys
 import pygame as pg
 
 
-WIDTH, HEIGHT = 1200, 700
+WIDTH, HEIGHT = 1600, 900
 
+moving = {
+    pg.K_UP: (0, -5), 
+    pg.K_DOWN: (0, +5), 
+    pg.K_LEFT: (-5, 0), 
+    pg.K_RIGHT: (+5, 0)
+}
+
+def collision(obj: pg.Rect) -> tuple[bool, bool]:
+    """
+    
+    オブジェクトが画面内にいるかいないかを判定する関数
+    引数2 obj : オブジェクトsurfaceのRect
+    戻り値 : 横、縦方向のはみ出し判定(画面内：True, 画面外：False)
+    """
+    yoko, tate = True, True
+    if (obj.left < 0) or (WIDTH < obj.right):
+        yoko = False
+    if (obj.top < 0) or (HEIGHT < obj.bottom):
+        tate = False
+    return yoko, tate
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -20,8 +40,8 @@ def main():
     bb_rct = bb_img.get_rect()
     bb_rct.center = x, y  # 練習２
     vx, vy = +5, +5  #練習２
-    moving = {pg.K_UP: (0, -5), pg.K_DOWN: (0, +5), pg.K_LEFT: (-5, 0), pg.K_RIGHT: (+5, 0)}
     kk_rct = kk_img.get_rect()
+    kk_rct.center = 900, 400
     clock = pg.time.Clock()
     tmr = 0
 
@@ -37,12 +57,19 @@ def main():
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
 
-        kk_rct[0] += sum_mv[0]
-        kk_rct[1] += sum_mv[1]
+        kk_rct.move_ip(sum_mv)
+        if collision(kk_rct) != (True, True):
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
+        
 
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx, vy)  #  練習２
+        yoko, tate = collision(bb_rct)
+        if not yoko:  # 爆弾が横にはみでたら
+            vx *= -1
+        if not tate:  # 爆弾がたてにはみでたら
+            vy *= -1
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
