@@ -27,6 +27,7 @@ def collision(obj: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 def main():
+    tmr = 0
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
@@ -43,7 +44,7 @@ def main():
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
-    tmr = 0
+    
 
     while True:
         for event in pg.event.get():
@@ -77,6 +78,8 @@ def main():
             vy *= -1
         screen.blit(bb_img, bb_rct)
         pg.display.update()
+        vx *= 1.001
+        vy *= 1.001
         tmr += 1
         clock.tick(50)
 
