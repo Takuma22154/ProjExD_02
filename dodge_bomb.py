@@ -65,7 +65,7 @@ def main():
             print("ゲームオーバー")
             return
         
-        key_lst = pg.key.get_pressed()  #74行目までキーボード入力に応じたこうかとんの移動処理
+        key_lst = pg.key.get_pressed()  #74行目までキーボード入力に応じたこうかとんの移動処理 
         sum_mv = [0, 0]
         for k, mv in moving.items():
             if key_lst[k]:
