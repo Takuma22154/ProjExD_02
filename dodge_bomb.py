@@ -2,7 +2,6 @@ import random
 import sys
 import pygame as pg
 
-
 WIDTH, HEIGHT = 1600, 900
 
 moving = {
@@ -11,6 +10,7 @@ moving = {
     pg.K_LEFT: (-5, 0), 
     pg.K_RIGHT: (+5, 0)
 }
+
 
 def collision(obj: pg.Rect) -> tuple[bool, bool]:
     """
@@ -26,12 +26,14 @@ def collision(obj: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
+
 def main():
     tmr = 0
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
+    kk_img_1 = pg.image.load("ex02/fig/0.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
     bb_img = pg.Surface((20, 20))
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
@@ -43,8 +45,7 @@ def main():
     vx, vy = +5, +5  #練習２
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
-    clock = pg.time.Clock()
-    
+    clock = pg.time.Clock() 
 
     while True:
         for event in pg.event.get():
@@ -52,22 +53,29 @@ def main():
                 return
             
         if kk_rct.colliderect(bb_rct):
+            kk_img = kk_img_1  # 59行目までゲームオーバー時の画像変更(未完成)
+            kk_rct = kk_img.get_rect()
+            kk_rct.center = 900, 400
+            screen.blit(kk_img, kk_rct)
+            tmr_ex = tmr  #64行目まで爆弾激突後の画面表示処理
+            while(tmr_ex > tmr -150):
+                tmr += 1
+                clock.tick(50)
+                continue
             print("ゲームオーバー")
             return
         
-        key_lst = pg.key.get_pressed()
+        key_lst = pg.key.get_pressed()  #74行目までキーボード入力に応じたこうかとんの移動処理
         sum_mv = [0, 0]
- 
         for k, mv in moving.items():
             if key_lst[k]:
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
-
         kk_rct.move_ip(sum_mv)
-        if collision(kk_rct) != (True, True):
+
+        if collision(kk_rct) != (True, True):  # ここから77行目までこうかとんが画面外に出ないようにする処理
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         
-
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx, vy)  #  練習２
