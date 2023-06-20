@@ -78,8 +78,8 @@ def main():
             vy *= -1
         screen.blit(bb_img, bb_rct)
         pg.display.update()
-        vx *= 1.001
-        vy *= 1.001
+        vx *= 1.005  # 爆弾を１フレーム当たり1.005倍に加速
+        vy *= 1.005
         tmr += 1
         clock.tick(50)
 
