@@ -3,7 +3,7 @@ import sys
 import pygame as pg
 
 
-WIDTH, HEIGHT = 1600, 900
+WIDTH, HEIGHT = 1200, 700
 
 
 def main():
@@ -18,7 +18,8 @@ def main():
     x = random.randint(0, WIDTH)  # 爆弾用の乱数、x軸
     y = random.randint(0, HEIGHT)  # 爆弾用の乱数、y軸
     bb_rct = bb_img.get_rect()
-    bb_rct.center = x, y
+    bb_rct.center = x, y  # 練習２
+    vx, vy = +5, +5
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -28,10 +29,11 @@ def main():
 
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
+        bb_rct.move_ip(vx, vy)
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
-        clock.tick(10)
+        clock.tick(50)
 
 
 if __name__ == "__main__":
